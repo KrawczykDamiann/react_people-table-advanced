@@ -24,6 +24,10 @@ export const PeopleTable: React.FC<Props> = ({
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
 
+  // 🔽 ZNORMALIZOWANY STRING Z PARAMETRAMI 🔽
+  const searchString = searchParams.toString();
+  const normalizedSearch = searchString ? `?${searchString}` : '';
+
   const getSortParams = (fieldName: string): SearchParams => {
     if (sort !== fieldName) {
       return { sort: fieldName, order: null };
@@ -52,7 +56,7 @@ export const PeopleTable: React.FC<Props> = ({
     return slug === selectedSlug ? 'has-background-warning' : '';
   };
 
-  const getPersonLinkClass = (sex: string) => {
+  const getPersonLinkClass = (sex: 'm' | 'f') => {
     return sex === 'f' ? 'has-text-danger' : '';
   };
 
@@ -100,7 +104,7 @@ export const PeopleTable: React.FC<Props> = ({
                 <Link
                   to={{
                     pathname: `/people/${person.slug}`,
-                    search: searchParams.toString(),
+                    search: normalizedSearch,
                   }}
                   className={getPersonLinkClass(person.sex)}
                 >
@@ -115,7 +119,7 @@ export const PeopleTable: React.FC<Props> = ({
                   <Link
                     to={{
                       pathname: `/people/${mother.slug}`,
-                      search: searchParams.toString(),
+                      search: normalizedSearch,
                     }}
                     className={getPersonLinkClass(mother.sex)}
                   >
@@ -130,7 +134,7 @@ export const PeopleTable: React.FC<Props> = ({
                   <Link
                     to={{
                       pathname: `/people/${father.slug}`,
-                      search: searchParams.toString(),
+                      search: normalizedSearch,
                     }}
                     className={getPersonLinkClass(father.sex)}
                   >

@@ -8,7 +8,7 @@ import { PeopleTable } from './PeopleTable';
 
 type PersonFromApi = Omit<Person, 'slug'>;
 
-const createSlug = (person: Omit<Person, 'slug'>) => {
+const createSlug = (person: PersonFromApi) => {
   return `${person.name.toLowerCase().replace(/\s/g, '-')}-${person.born}`;
 };
 
@@ -72,12 +72,24 @@ export const PeoplePage = () => {
         const val1 = p1[sort as keyof Person];
         const val2 = p2[sort as keyof Person];
 
-        if (typeof val1 === 'number' && typeof val2 === 'number') {
-          return val1 - val2;
+        if (val1 == null && val2 != null) {
+          return 1;
+        }
+
+        if (val1 != null && val2 == null) {
+          return -1;
+        }
+
+        if (val1 == null && val2 == null) {
+          return 0;
         }
 
         if (typeof val1 === 'string' && typeof val2 === 'string') {
-          return val1.localeCompare(val2);
+          return val1.toLowerCase().localeCompare(val2.toLowerCase());
+        }
+
+        if (typeof val1 === 'number' && typeof val2 === 'number') {
+          return val1 - val2;
         }
 
         return 0;
