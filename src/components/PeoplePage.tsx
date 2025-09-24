@@ -6,9 +6,13 @@ import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 
+type PersonFromApi = Omit<Person, 'slug'>;
+
 const createSlug = (person: Omit<Person, 'slug'>) => {
   return `${person.name.toLowerCase().replace(/\s/g, '-')}-${person.born}`;
 };
+
+const ALLOWED_SORT_FIELDS = ['name', 'sex', 'born', 'died'];
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -19,7 +23,7 @@ export const PeoplePage = () => {
 
   useEffect(() => {
     getPeople()
-      .then(data => {
+      .then((data: PersonFromApi[]) => {
         const peopleWithSlugs = data.map(p => ({
           ...p,
           slug: createSlug(p),
@@ -63,7 +67,7 @@ export const PeoplePage = () => {
       });
     }
 
-    if (sort) {
+    if (sort && ALLOWED_SORT_FIELDS.includes(sort)) {
       filteredPeople.sort((p1, p2) => {
         const val1 = p1[sort as keyof Person];
         const val2 = p2[sort as keyof Person];
@@ -101,7 +105,7 @@ export const PeoplePage = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          {people.length > 0 && (
+          {!loading && (
             <div className="column is-7-tablet is-narrow-desktop">
               <PeopleFilters />
             </div>

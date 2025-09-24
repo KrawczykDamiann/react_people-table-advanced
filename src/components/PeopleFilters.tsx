@@ -19,17 +19,19 @@ export const PeopleFilters = () => {
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      if (queryInput === query) {
+      const trimmedQuery = queryInput.trim();
+
+      if (trimmedQuery === query) {
         return;
       }
 
       setSearchParams(currentParams => {
         const newParams = new URLSearchParams(currentParams);
 
-        if (!queryInput) {
+        if (!trimmedQuery) {
           newParams.delete('query');
         } else {
-          newParams.set('query', queryInput);
+          newParams.set('query', trimmedQuery);
         }
 
         return newParams;
